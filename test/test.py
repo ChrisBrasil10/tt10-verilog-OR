@@ -38,3 +38,38 @@ async def test_project(dut):
 
     # Keep testing the module by changing the input values, waiting for
     # one or more clock cycles, and asserting the expected output values.
+    # Test Case 2: Edge case with all zeros
+    dut.ui_in.value = 0  
+    dut.uio_in.value = 0  
+    await ClockCycles(dut.clk, 1)
+    assert dut.uo_out.value == 0 #(Expected: 0)
+
+    # Test Case 3: Edge case with all ones
+    dut.ui_in.value = 255  
+    dut.uio_in.value = 255  
+    await ClockCycles(dut.clk, 1)
+    assert dut.uo_out.value == 255  # (Expected: 255)
+
+    # Test Case 4: OR with only one bit set in each input
+    dut.ui_in.value = 128  
+    dut.uio_in.value = 1  
+    await ClockCycles(dut.clk, 1)
+    assert dut.uo_out.value == 129 #(Expected: 129)
+
+    # Test Case 5: Random OR operation
+    dut.ui_in.value = 170  
+    dut.uio_in.value = 85  
+    await ClockCycles(dut.clk, 1)
+    assert dut.uo_out.value == 255  #  (Expected: 255)
+
+    # Test Case 6: Test for alternating bits
+    dut.ui_in.value = 85  
+    dut.uio_in.value = 170  
+    await ClockCycles(dut.clk, 1)
+    assert dut.uo_out.value == 255  #(Expected: 255)
+
+    # Test Case 7: Test with mix of zeros and ones
+    dut.ui_in.value = 170  
+    dut.uio_in.value = 85  
+    await ClockCycles(dut.clk, 1)
+    assert dut.uo_out.value == 255  # 11111111 (Expected: 255)
